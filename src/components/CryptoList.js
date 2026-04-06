@@ -3,15 +3,23 @@ import React, { useEffect, useState } from "react";
 function CryptoList() {
   const [coins, setCoins] = useState([]);
 
-  useEffect(() => {
+useEffect(() => {
+  const fetchData = () => {
     fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd")
       .then((res) => res.json())
       .then((data) => setCoins(data));
-  }, []);
+  };
+
+  fetchData(); // initial call
+
+  const interval = setInterval(fetchData, 10000); // every 10 seconds
+
+  return () => clearInterval(interval); // cleanup
+}, []);
 
   return (
     <div style={{ textAlign: "center" }}>
-      <h1>🚀 Crypto Price Tracker</h1>
+      <h1>Crypto Price Tracker</h1>
 
       <div style={{
         display: "flex",

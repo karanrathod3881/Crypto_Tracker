@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import PriceChart from "./PriceChart";
+
 
 function CryptoList() {
   const [selectedCoin, setSelectedCoin] = useState(null);
@@ -22,7 +23,8 @@ function CryptoList() {
   }, []);
 
   // Filter + Sort logic
-  const filteredCoins = coins
+const filteredCoins = useMemo(() => {
+  return coins
     .filter((coin) =>
       coin.name.toLowerCase().includes(search.toLowerCase())
     )
@@ -31,6 +33,7 @@ function CryptoList() {
         ? a.current_price - b.current_price
         : b.current_price - a.current_price
     );
+}, [coins, search, sortOrder]);
 
   return (
     <div style={{ textAlign: "center" }}>
@@ -60,7 +63,7 @@ function CryptoList() {
       </select>
 
       {/* Debug (remove later) */}
-      <p>Selected Coin: {selectedCoin}</p>
+      {/* <p>Selected Coin: {selectedCoin}</p> */}
       
        {/* Chart */}
       {selectedCoin && <PriceChart coinId={selectedCoin} />}
@@ -76,13 +79,8 @@ function CryptoList() {
         {filteredCoins.map((coin) => (
           <div
             key={coin.id}
-            onClick={() => {
-              console.log("Clicked:", coin.id);
-              
-              // ✅ Force re-render fix (important)
-              setSelectedCoin(null);
-              setTimeout(() => setSelectedCoin(coin.id), 100);
-            }}
+            onClick={() => setSelectedCoin(coin.id)}
+            
             style={{
               border: "1px solid #ccc",
               borderRadius: "10px",

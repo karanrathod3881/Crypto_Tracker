@@ -1,21 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
+import { signOut } from "firebase/auth";
 import { auth } from "./firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
 
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import CryptoList from "./components/CryptoList";
 
+import { AuthContext } from "./context/AuthContext";
+
 function App() {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-
-    return () => unsubscribe();
-  }, []);
+  
+  const { user } = useContext(AuthContext);
 
   const handleLogout = () => {
     signOut(auth);
@@ -30,12 +25,12 @@ function App() {
           <p>Welcome: {user.email}</p>
           <button onClick={handleLogout}>Logout</button>
 
-          {/* Show app only after login */}
+          {/* Protected App */}
           <CryptoList />
         </>
       ) : (
         <>
-          {/* Show only auth if not logged in */}
+          {/* Auth UI */}
           <Signup />
           <Login />
         </>

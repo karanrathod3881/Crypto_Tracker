@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
+// import React, { useEffect, useState, memo } from "react";
+
 import {
   Chart as ChartJS,
   LineElement,
@@ -77,4 +79,5 @@ function PriceChart({ coinId }) {
   );
 }
 
-export default PriceChart;
+
+export default React.memo(PriceChart);

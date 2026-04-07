@@ -13,7 +13,10 @@ function CryptoList() {
       fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd")
         .then((res) => res.json())
         .then((data) => setCoins(data))
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          console.error(err);
+            alert("Failed to fetch crypto data. Please try again.");
+                  });
     };
 
     fetchData();
@@ -80,7 +83,7 @@ const filteredCoins = useMemo(() => {
           <div
             key={coin.id}
             onClick={() => setSelectedCoin(coin.id)}
-            
+
             style={{
               border: "1px solid #ccc",
               borderRadius: "10px",
@@ -99,7 +102,7 @@ const filteredCoins = useMemo(() => {
                   coin.price_change_percentage_24h > 0 ? "green" : "red"
               }}
             >
-              {coin.price_change_percentage_24h.toFixed(2)}%
+              {coin.price_change_percentage_24h?.toFixed(2) || "0.00"}%
             </p>
           </div>
         ))}

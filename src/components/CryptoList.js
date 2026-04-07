@@ -11,17 +11,17 @@ function CryptoList() {
     const fetchData = () => {
       fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd")
         .then((res) => res.json())
-        .then((data) => setCoins(data));
+        .then((data) => setCoins(data))
+        .catch((err) => console.error(err));
     };
 
     fetchData();
 
     const interval = setInterval(fetchData, 10000);
-
     return () => clearInterval(interval);
   }, []);
 
-  // Filter + Sort logic
+  // ✅ Filter + Sort logic
   const filteredCoins = coins
     .filter((coin) =>
       coin.name.toLowerCase().includes(search.toLowerCase())
@@ -34,9 +34,9 @@ function CryptoList() {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <h1>Crypto Price Tracker</h1>
+      <h1>🚀 Crypto Price Tracker</h1>
 
-      {/* Search */}
+      {/* 🔍 Search */}
       <input
         type="text"
         placeholder="Search coin..."
@@ -49,7 +49,7 @@ function CryptoList() {
         }}
       />
 
-      {/* Sort */}
+      {/* 🔽 Sort */}
       <select
         value={sortOrder}
         onChange={(e) => setSortOrder(e.target.value)}
@@ -59,16 +59,27 @@ function CryptoList() {
         <option value="desc">Price High → Low</option>
       </select>
 
+      {/* 🧪 Debug (remove later) */}
+      <p>Selected Coin: {selectedCoin}</p>
+
       {/* Coin List */}
-      <div style={{
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "center"
-      }}>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center"
+        }}
+      >
         {filteredCoins.map((coin) => (
           <div
             key={coin.id}
-            onClick={() => setSelectedCoin(coin.id)}
+            onClick={() => {
+              console.log("Clicked:", coin.id);
+              
+              // ✅ Force re-render fix (important)
+              setSelectedCoin(null);
+              setTimeout(() => setSelectedCoin(coin.id), 100);
+            }}
             style={{
               border: "1px solid #ccc",
               borderRadius: "10px",
@@ -81,16 +92,19 @@ function CryptoList() {
             <img src={coin.image} width="50" alt={coin.name} />
             <h3>{coin.name}</h3>
             <p>${coin.current_price}</p>
-            <p style={{
-              color: coin.price_change_percentage_24h > 0 ? "green" : "red"
-            }}>
+            <p
+              style={{
+                color:
+                  coin.price_change_percentage_24h > 0 ? "green" : "red"
+              }}
+            >
               {coin.price_change_percentage_24h.toFixed(2)}%
             </p>
           </div>
         ))}
-      </div>
+    </div>
 
-      {/* Chart */}
+      {/* 📊 Chart */}
       {selectedCoin && <PriceChart coinId={selectedCoin} />}
     </div>
   );

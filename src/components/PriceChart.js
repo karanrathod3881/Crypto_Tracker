@@ -5,42 +5,74 @@ import {
   LineElement,
   CategoryScale,
   LinearScale,
-  PointElement
+  PointElement,
+  Tooltip,
+  Legend
 } from "chart.js";
 
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
+ChartJS.register(
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend
+);
 
 function PriceChart({ coinId }) {
   const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
-    fetch(
-      `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=7`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setChartData(data.prices);
-      });
+    if (!coinId) return;
+
+    const fetchChart = async () => {
+      try {
+        const res = await fetch(
+          `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=7`
+        );
+        const data = await res.json();
+
+        console.log("API:", data); // debug
+
+        if (data?.prices?.length > 0) {
+          setChartData(data.prices);
+        } else {
+          setChartData([]);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchChart();
   }, [coinId]);
 
-  const data = {
+  const chartConfig = {
     labels: chartData.map((item) =>
       new Date(item[0]).toLocaleDateString()
     ),
     datasets: [
       {
-        label: "Price (USD)",
+        label: `${coinId} Price (USD)`,
         data: chartData.map((item) => item[1]),
         borderColor: "blue",
-        fill: false
+        backgroundColor: "rgba(0,0,255,0.1)",
+        tension: 0.3,
+        fill: true
       }
     ]
   };
 
   return (
-    <div style={{ width: "80%", margin: "auto" }}>
-      <h2>Price Chart</h2>
-      <Line data={data} />
+    <div style={{ width: "80%", margin: "20px auto" }}>
+      <h2>{coinId} - Last 7 Days</h2>
+
+      {/* ✅ Force render properly */}
+      {chartData.length > 0 ? (
+        <Line data={chartConfig} />
+      ) : (
+        <p>Loading chart...</p>
+      )}
     </div>
   );
 }

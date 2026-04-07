@@ -67,7 +67,7 @@ function PriceChart({ coinId }) {
     <div style={{ width: "80%", margin: "20px auto" }}>
       <h2>{coinId} - Last 7 Days</h2>
 
-      {/* ✅ Force render properly */}
+      {/* Force render properly */}
       {chartData.length > 0 ? (
         <Line data={chartConfig} />
       ) : (

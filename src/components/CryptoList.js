@@ -21,7 +21,7 @@ function CryptoList() {
     return () => clearInterval(interval);
   }, []);
 
-  // ✅ Filter + Sort logic
+  // Filter + Sort logic
   const filteredCoins = coins
     .filter((coin) =>
       coin.name.toLowerCase().includes(search.toLowerCase())
@@ -34,9 +34,9 @@ function CryptoList() {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <h1>🚀 Crypto Price Tracker</h1>
+      <h1> Crypto Price Tracker</h1>
 
-      {/* 🔍 Search */}
+      {/* Search */}
       <input
         type="text"
         placeholder="Search coin..."
@@ -49,7 +49,7 @@ function CryptoList() {
         }}
       />
 
-      {/* 🔽 Sort */}
+      {/* Sort */}
       <select
         value={sortOrder}
         onChange={(e) => setSortOrder(e.target.value)}
@@ -59,7 +59,7 @@ function CryptoList() {
         <option value="desc">Price High → Low</option>
       </select>
 
-      {/* 🧪 Debug (remove later) */}
+      {/* Debug (remove later) */}
       <p>Selected Coin: {selectedCoin}</p>
 
       {/* Coin List */}
@@ -104,7 +104,7 @@ function CryptoList() {
         ))}
     </div>
 
-      {/* 📊 Chart */}
+      {/* Chart */}
       {selectedCoin && <PriceChart coinId={selectedCoin} />}
     </div>
   );

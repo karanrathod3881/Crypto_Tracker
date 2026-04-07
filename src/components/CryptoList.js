@@ -61,6 +61,9 @@ function CryptoList() {
 
       {/* Debug (remove later) */}
       <p>Selected Coin: {selectedCoin}</p>
+      
+       {/* Chart */}
+      {selectedCoin && <PriceChart coinId={selectedCoin} />}
 
       {/* Coin List */}
       <div
@@ -104,8 +107,6 @@ function CryptoList() {
         ))}
     </div>
 
-      {/* Chart */}
-      {selectedCoin && <PriceChart coinId={selectedCoin} />}
     </div>
   );
 }

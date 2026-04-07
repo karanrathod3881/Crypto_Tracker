@@ -4,6 +4,8 @@ import PriceChart from "./PriceChart";
 function CryptoList() {
   const [selectedCoin, setSelectedCoin] = useState(null);
   const [coins, setCoins] = useState([]);
+  const [search, setSearch] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
 
   useEffect(() => {
     const fetchData = () => {
@@ -19,9 +21,43 @@ function CryptoList() {
     return () => clearInterval(interval);
   }, []);
 
+  // Filter + Sort logic
+  const filteredCoins = coins
+    .filter((coin) =>
+      coin.name.toLowerCase().includes(search.toLowerCase())
+    )
+    .sort((a, b) =>
+      sortOrder === "asc"
+        ? a.current_price - b.current_price
+        : b.current_price - a.current_price
+    );
+
   return (
     <div style={{ textAlign: "center" }}>
       <h1>Crypto Price Tracker</h1>
+
+      {/* Search */}
+      <input
+        type="text"
+        placeholder="Search coin..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{
+          padding: "10px",
+          margin: "10px",
+          width: "200px"
+        }}
+      />
+
+      {/* Sort */}
+      <select
+        value={sortOrder}
+        onChange={(e) => setSortOrder(e.target.value)}
+        style={{ padding: "10px", margin: "10px" }}
+      >
+        <option value="asc">Price Low → High</option>
+        <option value="desc">Price High → Low</option>
+      </select>
 
       {/* Coin List */}
       <div style={{
@@ -29,7 +65,7 @@ function CryptoList() {
         flexWrap: "wrap",
         justifyContent: "center"
       }}>
-        {coins.map((coin) => (
+        {filteredCoins.map((coin) => (
           <div
             key={coin.id}
             onClick={() => setSelectedCoin(coin.id)}
